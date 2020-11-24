@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""PyBluez advanced example inquiry-with-rssi.py
+"""PyBlsdsduez advanced example inquiry-with-rssi.py
 Perform a simple device inquiry, followed by a remote name request of each
 discovered device
 """
+
+import bluetooth_device
+
+device_1 = bluetooth_device.bluetooth_device( "F8:16:54:0F:D2:C2" )
+device_2 = bluetooth_device.bluetooth_device( "AC:57:75:8B:FA:50" )
+device_3 = bluetooth_device.bluetooth_device( "A4:45:19:65:4A:BD" )
+
 while 1:
     import struct
     import sys
@@ -104,6 +111,17 @@ while 1:
                         bluetooth.get_byte(pkt[1 + 13 * nrsp + i]))
                     results.append((addr, rssi))
                     print("[{}] RSSI: {}".format(addr, rssi))
+                    
+                    if(device_1.addr == addr):
+                        device_1.set_strength(rssi)
+                        print("device_1 distance: %4.2f " %device_1.distance)
+                    elif(device_2.addr == addr):
+                        device_2.set_strength(rssi)
+                        print("device_2 distance: %4.2f" %device_2.distance)
+                    elif(device_3.addr == addr):
+                        device_3.set_strength(rssi)
+                        print("device_3 distance: %4.2f" %device_3.distance)
+                    
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 break
             elif event == bluez.EVT_CMD_STATUS:
