@@ -4,11 +4,12 @@ Perform a simple device inquiry, followed by a remote name request of each
 discovered device
 """
 
+from rssi_locator import triangulate
 import bluetooth_device
 
-device_1 = bluetooth_device.bluetooth_device( "F8:16:54:0F:D2:C2" )
-device_2 = bluetooth_device.bluetooth_device( "AC:57:75:8B:FA:50" )
-device_3 = bluetooth_device.bluetooth_device( "A4:45:19:65:4A:BD" )
+device_1 = bluetooth_device.bluetooth_device( "F8:16:54:0F:D2:C2" , 0, 0, -53.00)
+device_2 = bluetooth_device.bluetooth_device( "AC:57:75:8B:FA:50" , 2.5, 2.5, -53.00)
+device_3 = bluetooth_device.bluetooth_device( "A4:45:19:65:4A:BD" , 2.5, 0, -60)
 
 while 1:
     import struct
@@ -121,7 +122,7 @@ while 1:
                     elif(device_3.addr == addr):
                         device_3.set_strength(rssi)
                         print("device_3 distance: %4.2f" %device_3.distance)
-                    
+                triangulate(device_1, device_2, device_3)   
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 break
             elif event == bluez.EVT_CMD_STATUS:
