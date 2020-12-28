@@ -20,6 +20,7 @@ import sys
 import struct
 import bluetooth._bluetooth as bluez
 
+
 LE_META_EVENT = 0x3e
 LE_PUBLIC_ADDRESS=0x00
 LE_RANDOM_ADDRESS=0x01
@@ -154,8 +155,10 @@ def parse_events(sock, loop_count=100):
                     uuid = returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
                     txp, = struct.unpack("b", pkt[report_pkt_offset -2])
                     rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
-
-                    beac =  { 'uuid' : uuid, 'txp' : txp, 'rssi' : rssi}
+                    distance = 10**((float(txp)-float(rssi))/(20))
+            
+                
+                    beac =  { 'uuid' : uuid, 'txp' : txp, 'rssi' : rssi, 'distance' : distance}
                     
                     if (uuid == "24c7536bfbb24ef58c8d61a80923448f"):
                         myFullList.append(beac);
