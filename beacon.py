@@ -7,4 +7,12 @@ class beacon:
 
 
     def average(self):
-        self.distance = self.distance/self.count
+        if(self.count > 0):
+            self.distance = self.distance/self.count
+        return(self.distance)
+    
+    def flush(self):
+        self.distance = 0
+        self.count = 0
+        
+    

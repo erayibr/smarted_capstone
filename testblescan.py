@@ -25,24 +25,28 @@ blescan.hci_le_set_scan_parameters(sock)
 blescan.hci_enable_le_scan(sock)
 
 while True:
-    returnedList = blescan.parse_events(sock, 10)
+    returnedList = blescan.parse_events(sock, 30)
     print "----------"
     for beacon in returnedList:
-        print(beacon["uuid"], beacon["rssi"], beacon["distance"])
+        #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
         
-        if(uuid == beacon_1.uuid):
-            beacon_1.distance += distance
+        if(beacon["uuid"] == beacon_1.uuid):
+            beacon_1.distance += beacon["distance"]
             beacon_1.count += 1
-        elif(uuid == beacon_2.uuid):
-            beacon_2.distance += distance
+        elif(beacon["uuid"] == beacon_2.uuid):
+            beacon_2.distance += beacon["distance"]
             beacon_2.count += 1
         else:
-            beacon_3.distance += distance
+            beacon_3.distance += beacon["distance"]
             beacon_3.count += 1
             
-    beacon1.average()
-    beacon2.average()
-    beacon3.average()
+    print "beacon_1:", beacon_1.average()
+    print "beacon_2:", beacon_2.average()
+    print "beacon_3:", beacon_3.average()
+    
+    beacon_1.flush()
+    beacon_2.flush()
+    beacon_3.flush()
            
     #location[] = locator(distance_1, distance_2, distance_3, x1, x2, x3, y1, y2, y3)    
 #		print beacon
