@@ -6,6 +6,8 @@ import sys
 import beacon
 import bluetooth._bluetooth as bluez
 from rssi_locator import locator
+import requests
+import json
 
 dev_id = 0
 
@@ -49,10 +51,17 @@ while True:
        
     x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 2.6, 2.35, 0.1, 3.5, 0, 0)    
     print (x,y)
+    data = {
+      "x": x,
+      "y": y
+    }
     
-    file1 = open("MyFile.txt","w")
-    file1.write('{0}\n{1}\n'.format(x, y))
-    file1.close()
+    #file1 = open("MyFile.txt","w")
+    #file1.write('{0}\n{1}\n'.format(x, y))
+    #file1.close()
+    
+    with open('MyFile.txt', 'w') as outfile:
+        json.dump(data, outfile)
     
     
     beacon_1.flush()
