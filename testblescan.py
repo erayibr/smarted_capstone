@@ -5,6 +5,7 @@ import blescan
 import sys
 import beacon
 import bluetooth._bluetooth as bluez
+from rssi_locator import locator
 
 dev_id = 0
 
@@ -24,8 +25,10 @@ except:
 blescan.hci_le_set_scan_parameters(sock)
 blescan.hci_enable_le_scan(sock)
 
+
+
 while True:
-    returnedList = blescan.parse_events(sock, 30)
+    returnedList = blescan.parse_events(sock, 40)
     print "----------"
     for beacon in returnedList:
         #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
@@ -43,10 +46,15 @@ while True:
     print "beacon_1:", beacon_1.average()
     print "beacon_2:", beacon_2.average()
     print "beacon_3:", beacon_3.average()
+       
+    x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 2.6, 2.35, 0.1, 3.5, 0, 0)    
+    print (x,y)
+    
+    file1 = open("MyFile.txt","w")
+    file1.write('{0}\n{1}\n'.format(x, y))
+    file1.close()
+    
     
     beacon_1.flush()
     beacon_2.flush()
     beacon_3.flush()
-           
-    #location[] = locator(distance_1, distance_2, distance_3, x1, x2, x3, y1, y2, y3)    
-#		print beacon
