@@ -1,18 +1,19 @@
+import numpy as np
 class beacon:
     
     def __init__(self, uuid): 
         self.uuid = uuid
-        self.count = 0
-        self.distance = 0 #in meters
-
-
-    def average(self):
-        if(self.count > 0):
-            self.distance = self.distance/self.count
-        return(self.distance)
+        self.rssi = [] #in meters
+        self.distance = float(0)
+        self.N = float(2)
     
     def flush(self):
-        self.distance = 0
-        self.count = 0
+        temp = []
+        self.rssi = temp
+
+    def calc(self):
+        self.distance = 10**((float(-55)-float(np.median(self.rssi)))/(10*self.N))
+
+
         
     

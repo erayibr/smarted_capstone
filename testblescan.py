@@ -6,11 +6,11 @@ import sys
 import beacon
 import bluetooth._bluetooth as bluez
 from rssi_locator import locator
+from cleaner import clear
 import requests
 import json
 
 dev_id = 0
-
 
 beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e")
 beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c")
@@ -30,27 +30,31 @@ blescan.hci_enable_le_scan(sock)
 
 
 while True:
-    returnedList = blescan.parse_events(sock, 40)
-    print "----------"
+    returnedList = blescan.parse_events(sock, 100)
+
     for beacon in returnedList:
         #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
         
         if(beacon["uuid"] == beacon_1.uuid):
-            beacon_1.distance += beacon["distance"]
-            beacon_1.count += 1
+            beacon_1.rssi.append(beacon['rssi'])
         elif(beacon["uuid"] == beacon_2.uuid):
-            beacon_2.distance += beacon["distance"]
-            beacon_2.count += 1
+            beacon_2.rssi.append(beacon['rssi'])
         else:
-            beacon_3.distance += beacon["distance"]
-            beacon_3.count += 1
-            
-    print "beacon_1:", beacon_1.average()
-    print "beacon_2:", beacon_2.average()
-    print "beacon_3:", beacon_3.average()
+            beacon_3.rssi.append(beacon['rssi'])
+
+    clear()
+
+    beacon_1.calc()
+    beacon_2.calc()
+    beacon_3.calc()
+
+    print "beacon_1:", beacon_1.distance
+    print "beacon_2:", beacon_2.distance
+    print "beacon_3:", beacon_3.distance
        
     x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 2.6, 2.35, 0.1, 3.5, 0, 0)    
     print (x,y)
+    
     data = {
       "x": x,
       "y": y
