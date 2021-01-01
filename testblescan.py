@@ -39,7 +39,8 @@ while True:
             beacon_1.rssi.append(beacon['rssi'])
         elif(beacon["uuid"] == beacon_2.uuid):
             beacon_2.rssi.append(beacon['rssi'])
-        else:
+        elif(beacon["uuid"] == beacon_3.uuid):
+            #print(beacon['rssi'])
             beacon_3.rssi.append(beacon['rssi'])
 
     clear()
@@ -52,7 +53,7 @@ while True:
     print "beacon_2:", beacon_2.distance
     print "beacon_3:", beacon_3.distance
        
-    x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 2.6, 2.35, 0.1, 3.5, 0, 0)    
+    x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
     print (x,y)
     
     data = {
