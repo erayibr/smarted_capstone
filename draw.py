@@ -24,7 +24,7 @@ def clear():
 
 
 while True:
-    sleep(0.7) 
+    sleep(1) 
     clear()
     
     with open('MyFile.txt') as json_file:
@@ -39,7 +39,7 @@ while True:
         for k in range (40):
             if(y == (34-i) and x == k):
                 print(colored(chr(0x2588) + chr(0x2588) , 'red'), end = ' ')
-            elif( (i == 34 and (k == 1 or k == 24)) or (i==0 and k == 26)): 
+            elif( (i == 34 and (k == 1 or k == 24)) or (i==0 and k == 14)): 
                 print(colored(chr(0x2588) + chr(0x2588) , 'white'), end = ' ')
             else:
                 print(colored(chr(0x2588) + chr(0x2588) , 'blue'), end = ' ')
