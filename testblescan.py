@@ -9,6 +9,16 @@ from rssi_locator import locator
 from cleaner import clear
 import requests
 import json
+import socket
+import sys
+
+# Create a TCP/IP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Connect the socket to the port where the server is listening
+server_address = ( "192.168.10.101" , 10000)
+print >>sys.stderr, 'connecting to %s port %s' % server_address
+sock.connect(server_address)
 
 dev_id = 0
 
@@ -17,33 +27,43 @@ beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c")
 beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48")
 
 try:
-    sock = bluez.hci_open_dev(dev_id)
+    sock_bluetooth = bluez.hci_open_dev(dev_id)
     print "ble thread started"
 
 except:
     print "error accessing bluetooth device..."
     sys.exit(1)
 
-blescan.hci_le_set_scan_parameters(sock)
-blescan.hci_enable_le_scan(sock)
+blescan.hci_le_set_scan_parameters(sock_bluetooth)
+blescan.hci_enable_le_scan(sock_bluetooth)
 
 
 
-while True:
-    returnedList = blescan.parse_events(sock, 100)
 
-    for beacon in returnedList:
-        #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
-        
-        if(beacon["uuid"] == beacon_1.uuid):
-            beacon_1.rssi.append(beacon['rssi'])
-        elif(beacon["uuid"] == beacon_2.uuid):
-            beacon_2.rssi.append(beacon['rssi'])
-        elif(beacon["uuid"] == beacon_3.uuid):
-            #print(beacon['rssi'])
-            beacon_3.rssi.append(beacon['rssi'])
+returnedList = blescan.parse_events(sock_bluetooth, 100)
 
-    clear()
+print (returnedList)
+
+try:
+
+    # Send data
+    print >>sys.stderr, 'sending message'
+    sock.sendall(json.dumps(returnedList))
+
+    # Look for the response
+    amount_received = 0
+    amount_expected = len(returnedList)
+    
+    # while amount_received < amount_expected:
+    #    data = sock.recv(16)
+    #    amount_received += len(data)
+    #    print >>sys.stderr, 'received "%s"' % data
+
+finally:
+    print >>sys.stderr, 'closing socket'
+    sock.close()
+
+    #clear()
 
     beacon_1.calc()
     beacon_2.calc()
