@@ -69,9 +69,9 @@ finally:
     beacon_2.calc()
     beacon_3.calc()
 
-    print "beacon_1:", beacon_1.distance
-    print "beacon_2:", beacon_2.distance
-    print "beacon_3:", beacon_3.distance
+    print ("beacon_1:", beacon_1.distance)
+    print ("beacon_2:", beacon_2.distance)
+    print ("beacon_3:", beacon_3.distance)
        
     x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
     print (x,y)
