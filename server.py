@@ -21,9 +21,10 @@ sock.bind(server_address)
 # Listen for incoming connections
 sock.listen(1)
 
-data = ""
+
 
 while True:
+    data = ""
     # Wait for a connection
     print >>sys.stderr, 'waiting for a connection'
     connection, client_address = sock.accept()
@@ -66,3 +67,10 @@ while True:
     print "beacon_1:", beacon_1.distance
     print "beacon_2:", beacon_2.distance
     print "beacon_3:", beacon_3.distance
+
+    x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
+    print (x,y)
+
+    beacon_1.flush()
+    beacon_2.flush()
+    beacon_3.flush()
