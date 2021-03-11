@@ -2,25 +2,12 @@
 # jcs 6/8/2014
 
 import blescan
-import sys
-import beacon
 import bluetooth._bluetooth as bluez
-from rssi_locator import locator
-from cleaner import clear
-import requests
 import json
 import socket
 import sys
 
-
-
-
-
 dev_id = 0
-
-beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e")
-beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c")
-beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48")
 
 try:
     sock_bluetooth = bluez.hci_open_dev(dev_id)
@@ -32,8 +19,6 @@ except:
 
 blescan.hci_le_set_scan_parameters(sock_bluetooth)
 blescan.hci_enable_le_scan(sock_bluetooth)
-
-
 
 while True:
     returnedList = blescan.parse_events(sock_bluetooth, 200)
@@ -68,32 +53,3 @@ while True:
         print >>sys.stderr, 'closing socket'
         sock.close()
 
-    #clear()
-
-    beacon_1.calc()
-    beacon_2.calc()
-    beacon_3.calc()
-
-    print ("beacon_1:", beacon_1.distance)
-    print ("beacon_2:", beacon_2.distance)
-    print ("beacon_3:", beacon_3.distance)
-       
-    x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
-    print (x,y)
-    
-    data = {
-      "x": x,
-      "y": y
-    }
-    
-    #file1 = open("MyFile.txt","w")
-    #file1.write('{0}\n{1}\n'.format(x, y))
-    #file1.close()
-    
-    with open('MyFile.txt', 'w') as outfile:
-        json.dump(data, outfile)
-    
-    
-    beacon_1.flush()
-    beacon_2.flush()
-    beacon_3.flush()
