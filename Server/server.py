@@ -15,7 +15,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Bind the socket to the port
 server_address = ('192.168.10.101', 10000)
-print >>sys.stderr, 'starting up on %s port %s' % server_address
+print('starting up on %s port %s' % server_address, file=sys.stderr)
 sock.bind(server_address)       
 
 # Listen for incoming connections
@@ -24,27 +24,28 @@ sock.listen(1)
 
 
 while True:
-    data = ""
+    data = b""
     # Wait for a connection
-    print >>sys.stderr, 'waiting for a connection'
+    print('waiting for a connection', file=sys.stderr)
     connection, client_address = sock.accept()
 
     try:
-        print >>sys.stderr, 'connection from', client_address
+        print('connection from', client_address, file=sys.stderr)
 
         # Receive the data in small chunks and retransmit it
         while True:
             chunk = connection.recv(1024)
             data = data + chunk
             if chunk:
-                print >>sys.stderr, 'sending data back to the client'
+                print('sending data back to the client', file=sys.stderr)
                 #connection.sendall(data)
             else:
-                print >>sys.stderr, 'no more data from', client_address
+                print('no more data from', client_address, file=sys.stderr)
                 break
             
     finally:
         # Clean up the connection
+        
         data = json.loads(data)
         print(data)
         connection.close()
@@ -64,12 +65,12 @@ while True:
     beacon_2.calc()
     beacon_3.calc()
 
-    print "beacon_1:", beacon_1.distance
-    print "beacon_2:", beacon_2.distance
-    print "beacon_3:", beacon_3.distance
+    print("beacon_1:", beacon_1.distance)
+    print("beacon_2:", beacon_2.distance)
+    print("beacon_3:", beacon_3.distance)
 
     x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
-    print (x,y)
+    print((x,y))
 
     beacon_1.flush()
     beacon_2.flush()
