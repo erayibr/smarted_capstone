@@ -1,4 +1,6 @@
 import tkinter as tk
+import os
+import json
  
 # Create the window with the Tk class
 root = tk.Tk()
@@ -13,11 +15,17 @@ canvas.create_image(0, 0, anchor=tk.NW, image=map)
 
 # Loads and create image (put the image in the folder)
 img = tk.PhotoImage(file="visitor1.png")
-image = canvas.create_image(10, 10, anchor=tk.NW, image=img)
-
+y = 0
+x = 0
+image = canvas.create_image(x + 53, y + 621, image=img)
 
 def move(event = "none"):
-    canvas.move(image, -10, 0)
+    global x, y
+    with open((os.path.dirname(os.getcwd()) + '/Server/coordinates.txt'), 'r') as file:
+        data = json.loads(file.read( ))
+    canvas.move(image, (data["x"] - x)*160, (y - data["y"])*160)
+    x = data["x"]
+    y = data["y"]
     root.after(1000, move)
  
 # This bind window to keys so that move is called when you press a key

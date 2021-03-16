@@ -21,8 +21,6 @@ sock.bind(server_address)
 # Listen for incoming connections
 sock.listen(1)
 
-
-
 while True:
     data = b""
     # Wait for a connection
@@ -72,6 +70,11 @@ while True:
     x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
     print((x,y))
 
+    coordinates = {"x": x, "y": y}
+
     beacon_1.flush()
     beacon_2.flush()
     beacon_3.flush()
+
+    with open('coordinates.txt', 'w') as file:
+        file.write(json.dumps(coordinates))
