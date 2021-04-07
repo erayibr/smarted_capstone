@@ -22,7 +22,7 @@ sock.bind(server_address)
 sock.listen(1)
 
 while True:
-    data = b""
+    message = b""
     # Wait for a connection
     print('waiting for a connection', file=sys.stderr)
     connection, client_address = sock.accept()
@@ -33,7 +33,7 @@ while True:
         # Receive the data in small chunks and retransmit it
         while True:
             chunk = connection.recv(1024)
-            data = data + chunk
+            message = message + chunk
             if chunk:
                 print('sending data back to the client', file=sys.stderr)
                 #connection.sendall(data)
@@ -44,11 +44,11 @@ while True:
     finally:
         # Clean up the connection
         
-        data = json.loads(data)
-        print(data)
+        message = json.loads(message)
+        print(message)
         connection.close()
             
-    for beacon in data:
+    for beacon in message:
         #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
         
         if(beacon["uuid"] == beacon_1.uuid):
@@ -70,11 +70,11 @@ while True:
     x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
     print((x,y))
 
-    coordinates = {"x": x, "y": y}
+    data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance}
 
     beacon_1.flush()
     beacon_2.flush()
     beacon_3.flush()
 
-    with open('coordinates.txt', 'w') as file:
-        file.write(json.dumps(coordinates))
+    with open('data.txt', 'w') as file:
+        file.write(json.dumps(data))

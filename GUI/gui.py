@@ -2,20 +2,20 @@ import tkinter as tk
 import os
 import json
 import tkinter.messagebox
+import re
 
 # Create the window with the Tk class
 root = tk.Tk()
 root.state('zoomed')
 root.title("SMARTED Visitor Tracking Software")
+root.minsize(width = 1400, height = 800)
 
-leftframe=tk.Frame(root).pack(side="left")
+mainframe=tk.Frame(root).pack()
 #to manage the right of the screen
-rightframe=tk.Frame(leftframe).pack(side="left")
-# Create the canvas and make it visible with pack()
 
 # Create the canvas and make it visible with pack()
-canvas = tk.Canvas(leftframe, width=750, height=1080, highlightthickness=0, relief='ridge')
-canvas.pack(side = "left") # this makes it visible
+canvas = tk.Canvas(mainframe, width=750, height=1080, highlightthickness=0, relief='ridge')
+canvas.place(x=0, y=0) # this makes it visible
 
 map = tk.PhotoImage(file="map.png")
 canvas.create_image(0, 0, anchor=tk.NW, image=map)
@@ -28,13 +28,16 @@ image = canvas.create_image(x + 53, y + 621, image=img)
 
 def move(event = "none"):
     global x, y
-    with open((os.path.dirname(os.getcwd()) + '/Server/coordinates.txt'), 'r') as file:
+    with open((os.path.dirname(os.getcwd()) + '/Server/data.txt'), 'r') as file:
         data = json.loads(file.read( ))
     canvas.move(image, (data["x"] - x)*160, (y - data["y"])*160)
     x = data["x"]
     y = data["y"]
-    coordinates = "x:" + " {:2.2f}     ".format(x) + "y:" + " {:2.2f} ".format(y)
+    coordinates = "Location (m):    x=" + " {:2.2f}     ".format(x) + "y=" + " {:2.2f} ".format(y)
     coordinates_label.config(text = coordinates)
+
+    beacons = "Distance to Beacons (m):    b1=" + " {:2.2f}     ".format(data["beacon_1"]) + "b2=" + " {:2.2f}     ".format(data["beacon_2"]) + "b3=" + " {:2.2f}     ".format(data["beacon_3"])
+    beacons_label.config(text = beacons)
     root.after(1000, move)
  
 
@@ -92,32 +95,32 @@ def selection():
 # buttonEnter.grid(row=2,column=1,sticky="w")     #w = west
 # buttonCancel.grid(row=2,column=1,sticky="e")    #e = east
 
-label=tk.Label(rightframe,text= "Activate a Device:",font=20,fg="green").pack(anchor = tk.NW)
+label=tk.Label(mainframe,text= "Activate a Device:", font = "Arial 16 bold",fg="green").place(y=15, x=780)
 #Drop Down Box
 
-clicked=tk.StringVar(rightframe)
+clicked=tk.StringVar(mainframe)
 clicked.set(options[0])
-option=tk.OptionMenu(rightframe,clicked ,*options ).pack( anchor = tk.NW)
+option=tk.OptionMenu(mainframe,clicked ,*options ).place(x=970, y=10)
 # option.grid(row=3,column=1)
 
 #create boolean for checkbox
 var1=tk.IntVar()
-checkbox=tk.Checkbutton(rightframe,text="Room1",variable=var1).pack(anchor = tk.NW)
+checkbox=tk.Checkbutton(mainframe,text="Room1",variable=var1).place(x=1080, y=15)
 var2=tk.IntVar()
-checkbox2=tk.Checkbutton(checkbox,text="Room2",variable=var2).pack(anchor = tk.NW)
+checkbox2=tk.Checkbutton(checkbox,text="Room2",variable=var2).place(x=1160, y=15)
 
-buttonSelectDrop=tk.Button(rightframe,text="Select",command=selection).pack(anchor = tk.NW)
+buttonSelectDrop=tk.Button(mainframe,text="Select",command=selection).place(x=1240, y=8)
 # buttonSelectDrop.grid(row=4,column=3,sticky="w")
 
 
 """" Disable a Device"""
-label_dis=tk.Label(rightframe,text= "Disable a Device:",font=20,fg="red")
-label_dis.pack(anchor = tk.NW)
+label_dis=tk.Label(mainframe,text= "Disable a Device:", font = "Arial 16 bold" ,fg="red")
+label_dis.place(x=780, y=55)
 
 
-clicked_disabled=tk.StringVar(rightframe)
+clicked_disabled=tk.StringVar(mainframe)
 clicked_disabled.set(options[0])
-option_dis=tk.OptionMenu(rightframe,clicked_disabled ,*options ).pack(anchor = tk.NW)
+option_dis=tk.OptionMenu(mainframe,clicked_disabled ,*options ).place(x=970, y=50)
 # option.grid(row=0,column=0,padx=10,pady=10)
 
 
@@ -132,14 +135,18 @@ def selection_dis():
     canEnterRoom2[x-1]=False
     isActivated[x-1]=False
         
-buttonSelectDrop=tk.Button(rightframe,text="Select",command=selection_dis)
-buttonSelectDrop.pack(anchor = tk.NW)
+buttonSelectDrop=tk.Button(mainframe,text="Select",command=selection_dis)
+buttonSelectDrop.place(x=1080, y=48)
 # buttonSelectDrop.grid(row=0,column=1,sticky="w")
 
 
-coordinates_label= tk.Label(rightframe, text="Select Device: ",fg = "blue",
-		 font = "Verdana 16 bold")
-coordinates_label.pack(anchor = tk.NW)
+coordinates_label= tk.Label(mainframe, text="Location (m): ",fg = "blue",
+		 font = "Arial 16 bold")
+coordinates_label.place(x=780, y=95)
+
+beacons_label= tk.Label(mainframe, text="Distance to Beacons (m): ",fg = "Purple",
+		 font = "Arial 16 bold")
+beacons_label.place(x=780, y=135)
 
 # This bind window to keys so that move is called when you press a key
 root.after(0, move)
