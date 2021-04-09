@@ -24,11 +24,8 @@ canvas.create_image(0, 0, anchor=tk.NW, image=map)
 
 # Loads and create image (put the image in the folder)
 img = tk.PhotoImage(file="visitor1.png")
-y = 0
-x = 0
 image = canvas.create_image(0, 0, image=img)
 arrow_1 = canvas.create_line(0, 0, 0, 0, arrow=tk.LAST, fill='red', width= '4')  
-
 
 def move(event = "none"):
     global x, y

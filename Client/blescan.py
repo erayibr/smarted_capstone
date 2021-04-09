@@ -160,8 +160,7 @@ def parse_events(sock, loop_count=100):
                 
                     beac =  { 'uuid' : uuid, 'txp' : txp, 'rssi' : rssi}
                     
-                    if (uuid in ["213a8fd53d3fad98b245a8d2b2242a48", "bc5f638e79976aa42b455a6d5a70128c", "4d6fc88bbe756698da486866a36ec78e" ]):
-                        myFullList.append(beac);
+                    myFullList.append(beac);
 
                 done = True
 
