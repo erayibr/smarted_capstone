@@ -34,14 +34,14 @@ def move(event = "none"):
     angle = random.randint(0,360)
     x = 53 + data["x"]*161
     y = 622 -(data["y"])*161
-    arrow_length = 70
+    arrow_length = 100
     canvas.coords(image, x, y)
     canvas.coords(arrow_1, x , y , arrow_length*math.cos(angle)+x , arrow_length*math.sin(angle) + y)
 
     coordinates = "Location (m):    x=" + " {:2.2f}     ".format(x) + "y=" + " {:2.2f} ".format(y)
     coordinates_label.config(text = coordinates)
 
-    beacons = "Distance to Beacons (m):    b1=" + " {:2.2f}     ".format(data["beacon_1"]) + "b2=" + " {:2.2f}     ".format(data["beacon_2"]) + "b3=" + " {:2.2f}     ".format(data["beacon_3"])
+    beacons = "Distance to Beacons (m):    b1=" + " {:2.2f}     ".format(data["beacon_1"]) + "b2=" + " {:2.2f}     ".format(data["beacon_2"]) + "b3=" + " {:2.2f}     ".format(data["beacon_3"]) + "b4=" + " {:2.2f}     ".format(data["beacon_4"])
     beacons_label.config(text = beacons)
     root.after(1000, move)
  
