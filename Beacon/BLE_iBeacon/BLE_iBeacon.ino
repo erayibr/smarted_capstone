@@ -42,7 +42,7 @@ uint8_t temprature_sens_read();
 BLEAdvertising *pAdvertising;
 //struct timeval now;
 
-#define BEACON_UUID           "482a24b2-d2a8-45b2-98ad-3f3dd58f3a21" // UUID 1 128-Bit (may use linux tool uuidgen or random numbers via https://www.uuidgenerator.net/)
+#define BEACON_UUID           "d668cafc-a83d-49a5-a721-81e9d26c506f" // UUID 1 128-Bit (may use linux tool uuidgen or random numbers via https://www.uuidgenerator.net/)
 
 void setBeacon() {
 

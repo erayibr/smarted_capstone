@@ -3,6 +3,8 @@ import os
 import json
 import tkinter.messagebox
 import re
+import random
+import math
 
 # Create the window with the Tk class
 root = tk.Tk()
@@ -24,15 +26,21 @@ canvas.create_image(0, 0, anchor=tk.NW, image=map)
 img = tk.PhotoImage(file="visitor1.png")
 y = 0
 x = 0
-image = canvas.create_image(x + 53, y + 621, image=img)
+image = canvas.create_image(0, 0, image=img)
+arrow_1 = canvas.create_line(0, 0, 0, 0, arrow=tk.LAST, fill='red', width= '4')  
+
 
 def move(event = "none"):
     global x, y
     with open((os.path.dirname(os.getcwd()) + '/Server/data.txt'), 'r') as file:
         data = json.loads(file.read( ))
-    canvas.move(image, (data["x"] - x)*160, (y - data["y"])*160)
-    x = data["x"]
-    y = data["y"]
+    angle = random.randint(0,360)
+    x = 53 + data["x"]*161
+    y = 622 -(data["y"])*161
+    arrow_length = 100
+    canvas.coords(image, x, y)
+    canvas.coords(arrow_1, x , y , arrow_length*math.cos(angle)+x , arrow_length*math.sin(angle) + y)
+
     coordinates = "Location (m):    x=" + " {:2.2f}     ".format(x) + "y=" + " {:2.2f} ".format(y)
     coordinates_label.config(text = coordinates)
 
