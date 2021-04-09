@@ -34,7 +34,7 @@ def move(event = "none"):
     angle = random.randint(0,360)
     x = 53 + data["x"]*161
     y = 622 -(data["y"])*161
-    arrow_length = 100
+    arrow_length = 70
     canvas.coords(image, x, y)
     canvas.coords(arrow_1, x , y , arrow_length*math.cos(angle)+x , arrow_length*math.sin(angle) + y)
 
