@@ -6,9 +6,10 @@ from rssi_locator import locator
 from cleaner import clear
 import json
 
-beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e")
-beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c")
-beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48")
+beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e" , 1.2, 3.5)
+beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c", 2.35, 0)
+beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 0.1, 0)
+beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 4, 2)
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -58,23 +59,31 @@ while True:
         elif(beacon["uuid"] == beacon_3.uuid):
             #print(beacon['rssi'])
             beacon_3.rssi.append(beacon['rssi'])
+        elif(beacon["uuid"] == beacon_4.uuid):
+            #print(beacon['rssi'])
+            beacon_4.rssi.append(beacon['rssi'])
 
     beacon_1.calc()
     beacon_2.calc()
     beacon_3.calc()
+    beacon_4.calc()
 
-    print("beacon_1:", beacon_1.distance)
-    print("beacon_2:", beacon_2.distance)
-    print("beacon_3:", beacon_3.distance)
+    best3= []
+    best3.append(beacon_1)
+    best3.append(beacon_2)
+    best3.append(beacon_3)
+    best3.append(beacon_4)
+    best3.sort(key=lambda x: x.distance, reverse=True)
 
-    x,y = locator(beacon_1.distance, beacon_2.distance, beacon_3.distance, 1.2, 2.35, 0.1, 3.5, 0, 0)    
+    x,y = locator(best3[0].distance, best3[1].distance, best3[2].distance, best3[0].pos_x, best3[1].pos_x, best3[2].pos_x, best3[0].pos_y, best3[1].pos_y, best3[2].pos_y)    
     print((x,y))
 
-    data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance}
+    data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance , "beacon_4": beacon_4.distance}
 
     beacon_1.flush()
     beacon_2.flush()
     beacon_3.flush()
+    beacon_4.flush()
 
     with open('data.txt', 'w') as file:
         file.write(json.dumps(data))
