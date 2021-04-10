@@ -12,19 +12,47 @@ gets the 2-D coordinates of three beacons (all in any typical unit)
 returns the location of the device in 2-D cords (in the same unit as inputs)
 """
 from scipy.optimize import fsolve
-#from math import exp
-#from numpy import linspace
+#numpy calls C code, used for optimization
 from numpy import power
 
+def locator_4(dist1, dist2, dist3,dist4,x1,x2,x3,x4,y1,y2,y3,y4):
+    def equations(vars):
+        x , y, z ,t= vars
+        eq1 = power((x-x1) ,2) + power((y-y1) ,2) - power(dist1,2)
+        eq2 = power((x-x2) ,2) + power((y-y2) ,2) - power(dist2,2)
+        eq3 = power((x-x3) ,2) + power((y-y3) ,2) - power(dist3,2)
+        eq4 = power((x-x4) ,2) + power((y-y4) ,2) - power(dist4,2)
+        return [eq1, eq2, eq3, eq4]
+    
+    
+    #use three circles and solve with scipy.optimize.fsolve
+    d=min(dist1,dist2,dist3,dist4)
+    
+       
+    x, y, z, t=  fsolve(equations, (1, 1, 1, 1))
+    
+    if x>4:
+        x=4
+    if y>3.5:
+        y=3.5
+    if x<0:
+        x=0
+    if y<0:
+        y=0
+    
+    return x,y
+
 def locator(dist1, dist2, dist3,x1,x2,x3,y1,y2,y3):
+
+    
     def equations(vars):
         x , y, z = vars
-        eq1 = (x-x1)**2 + (y-y1)**2 - power(r1,2)
-        eq2 = (x-x2)**2 + (y-y2)**2 - power(r2,2)
-        eq3 = (x-x3)**2 + (y-y3)**2 - power(r3,2)
+        eq1 = power((x-x1) ,2) + power((y-y1) ,2) - power(r1,2)
+        eq2 = power((x-x2) ,2) + power((y-y2) ,2) - power(r2,2)
+        eq3 = power((x-x3) ,2) + power((y-y3) ,2) - power(r3,2)
         return [eq1, eq2, eq3]
     #calculate distances btw beacons
-    x=0;y=0
+    # x=0;y=0
     centerTocenter1_2= ( (x1-x2)**2 + (y1-y2)**2 )**0.5
     centerTocenter1_3= ( (x1-x3)**2 + (y1-y3)**2 )**0.5
     centerTocenter2_3= ( (x2-x3)**2 + (y2-y3)**2 )**0.5
@@ -124,28 +152,39 @@ def locator(dist1, dist2, dist3,x1,x2,x3,y1,y2,y3):
     
     #use three circles and solve with scipy.optimize.fsolve
     d=min(dist1,dist2,dist3)
-    if d<2:
+    
+    if d>0.5:
+        r1= dist1
+        r2= dist2
+        r3= dist3
+    else:
         if d==dist1:
             r1= dist1
             r2= (dist2/(dist1 + dist2))    *centerTocenter1_2
             r3= (dist3/(dist1 + dist3))    *centerTocenter1_3
         elif d==dist2:
             r1= (dist1/(dist1 + dist2))    *centerTocenter1_2
-            r2= dist2
+            r2= dist1
             r3= (dist3/(dist2 + dist3))    *centerTocenter2_3
         else:
             r1= (dist1/(dist1 + dist3))    *centerTocenter1_3
             r2= (dist2/(dist2 + dist3))    *centerTocenter2_3
             r3= dist3
-    else:
-        r1= dist1
-        r2= dist2
-        r3= dist3
+    
+    r1= dist1
+    r2= dist2
+    r3= dist3
     
     x, y, z =  fsolve(equations, (1, 1, 1))
-    if x>3.9:
-        x=3.9
-    if y>3.4:
-        y=3.4
-    return abs(x),abs(y)
+    
+    if x>4:
+        x=4
+    if y>3.5:
+        y=3.5
+    if x<0:
+        x=0
+    if y<0:
+        y=0
+    
+    return x,y
    
