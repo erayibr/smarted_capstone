@@ -32,11 +32,13 @@ def move(event = "none"):
     with open((os.path.dirname(os.getcwd()) + '/Server/data.txt'), 'r') as file:
         data = json.loads(file.read( ))
     angle = random.randint(0,360)
-    x = 53 + data["x"]*161
-    y = 622 -(data["y"])*161
+    x = data["x"]
+    y = data["y"]
+    x_image = 40 + data["x"]*161
+    y_image = 622 -(data["y"])*161
     arrow_length = 100
-    canvas.coords(image, x, y)
-    canvas.coords(arrow_1, x , y , arrow_length*math.cos(angle)+x , arrow_length*math.sin(angle) + y)
+    canvas.coords(image, x_image, y_image)
+    canvas.coords(arrow_1, x_image , y_image , arrow_length*math.cos(angle)+x_image , arrow_length*math.sin(angle) + y_image)
 
     coordinates = "Location (m):    x=" + " {:2.2f}     ".format(x) + "y=" + " {:2.2f} ".format(y)
     coordinates_label.config(text = coordinates)

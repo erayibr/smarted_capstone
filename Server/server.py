@@ -5,11 +5,12 @@ import beacon
 from rssi_locator import locator
 from cleaner import clear
 import json
+import time
 
-beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e" , 1.2, 3.5)
-beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c", 2.35, 0)
-beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 0.1, 0)
-beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 4, 2)
+beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e" , 1.25, 3.5)
+beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c", 1.25, 0)
+beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 3.25, 1.25)
+beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.75, 3.5)
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,6 +22,7 @@ sock.bind(server_address)
 
 # Listen for incoming connections
 sock.listen(1)
+connection_number = 1
 
 while True:
     message = b""
@@ -30,25 +32,29 @@ while True:
 
     try:
         print('connection from', client_address, file=sys.stderr)
+        time_start = round(time.time() * 1000)
 
         # Receive the data in small chunks and retransmit it
         while True:
             chunk = connection.recv(1024)
             message = message + chunk
-            if chunk:
-                print('sending data back to the client', file=sys.stderr)
-                #connection.sendall(data)
-            else:
-                print('no more data from', client_address, file=sys.stderr)
+            if(not chunk):
                 break
+            # if chunk:
+            #     #print('sending data back to the client', file=sys.stderr)
+            #     #connection.sendall(data)
+            # else:
+            #     #print('no more data from', client_address, file=sys.stderr)
+            #     break
             
     finally:
         # Clean up the connection
         
         message = json.loads(message)
-        print(message)
+        #print(message)
         connection.close()
-            
+
+    time_start_proc = round(time.time() * 1000)        
     for beacon in message:
         #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
         
@@ -75,11 +81,15 @@ while True:
     best3.append(beacon_4)
     best3.sort(key=lambda x: x.distance, reverse=True)
 
-    x,y = locator(best3[0].distance, best3[1].distance, best3[2].distance, best3[0].pos_x, best3[1].pos_x, best3[2].pos_x, best3[0].pos_y, best3[1].pos_y, best3[2].pos_y)    
+    x,y = locator(best3[3].distance, best3[1].distance, best3[2].distance, best3[3].pos_x, best3[1].pos_x, best3[2].pos_x, best3[3].pos_y, best3[1].pos_y, best3[2].pos_y)    
     print((x,y))
 
     data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance , "beacon_4": beacon_4.distance}
 
+    time_end = round(time.time() * 1000)
+    print("The total time required for a server response in connection " + str(connection_number) + " is: " + str(time_end - time_start) + "ms")
+    print("The processing time for a single device in connection " + str(connection_number) + " is: " + str(time_end - time_start_proc) + "ms")
+    connection_number = connection_number + 1
     beacon_1.flush()
     beacon_2.flush()
     beacon_3.flush()
