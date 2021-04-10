@@ -1,50 +1,30 @@
 import tkinter as tk
+#from tkinter import *
 import os
 import json
-import tkinter.messagebox
 import re
-import random
-import math
-
+ 
 # Create the window with the Tk class
 root = tk.Tk()
 root.state('zoomed')
 root.title("SMARTED Visitor Tracking Software")
-root.minsize(width = 1400, height = 800)
-
-mainframe=tk.Frame(root).pack()
+#to manage the left of the screen
+leftframe=tk.Frame(root).pack(side="left")
 #to manage the right of the screen
-
+rightframe=tk.Frame(leftframe).pack(side="right")
 # Create the canvas and make it visible with pack()
-canvas = tk.Canvas(mainframe, width=750, height=1080, highlightthickness=0, relief='ridge')
-canvas.place(x=0, y=0) # this makes it visible
+# canvas = tk.Canvas(root, width=1920, height=1080, highlightthickness=0, relief='ridge')
+canvas = tk.Canvas(leftframe, width=1024, height=720, bg="white")
+canvas.pack(side="left") # this makes it visible
 
 map = tk.PhotoImage(file="map.png")
 canvas.create_image(0, 0, anchor=tk.NW, image=map)
 
 # Loads and create image (put the image in the folder)
 img = tk.PhotoImage(file="visitor1.png")
-image = canvas.create_image(0, 0, image=img)
-arrow_1 = canvas.create_line(0, 0, 0, 0, arrow=tk.LAST, fill='red', width= '4')  
-
-def move(event = "none"):
-    global x, y
-    with open((os.path.dirname(os.getcwd()) + '/Server/data.txt'), 'r') as file:
-        data = json.loads(file.read( ))
-    angle = random.randint(0,360)
-    x = 53 + data["x"]*161
-    y = 622 -(data["y"])*161
-    arrow_length = 100
-    canvas.coords(image, x, y)
-    canvas.coords(arrow_1, x , y , arrow_length*math.cos(angle)+x , arrow_length*math.sin(angle) + y)
-
-    coordinates = "Location (m):    x=" + " {:2.2f}     ".format(x) + "y=" + " {:2.2f} ".format(y)
-    coordinates_label.config(text = coordinates)
-
-    beacons = "Distance to Beacons (m):    b1=" + " {:2.2f}     ".format(data["beacon_1"]) + "b2=" + " {:2.2f}     ".format(data["beacon_2"]) + "b3=" + " {:2.2f}     ".format(data["beacon_3"]) + "b4=" + " {:2.2f}     ".format(data["beacon_4"])
-    beacons_label.config(text = beacons)
-    root.after(1000, move)
- 
+y = 0
+x = 0
+image = canvas.create_image(x + 53, y + 621, image=img)
 
 options= ["Device 1", 
           "Device 2",
@@ -100,32 +80,37 @@ def selection():
 # buttonEnter.grid(row=2,column=1,sticky="w")     #w = west
 # buttonCancel.grid(row=2,column=1,sticky="e")    #e = east
 
-label=tk.Label(mainframe,text= "Activate a Device:", font = "Arial 16 bold",fg="green").place(y=15, x=780)
+
+
+label=tk.Label(rightframe,text= "Activate a Device:",font=20,fg="green").pack()
 #Drop Down Box
 
-clicked=tk.StringVar(mainframe)
+clicked=tk.StringVar(rightframe)
 clicked.set(options[0])
-option=tk.OptionMenu(mainframe,clicked ,*options ).place(x=970, y=10)
+option=tk.OptionMenu(rightframe,clicked ,*options ).pack()
 # option.grid(row=3,column=1)
+
+
+
 
 #create boolean for checkbox
 var1=tk.IntVar()
-checkbox=tk.Checkbutton(mainframe,text="Room1",variable=var1).place(x=1080, y=15)
+checkbox=tk.Checkbutton(rightframe,text="Room1",variable=var1).pack()
 var2=tk.IntVar()
-checkbox2=tk.Checkbutton(checkbox,text="Room2",variable=var2).place(x=1160, y=15)
+checkbox2=tk.Checkbutton(checkbox,text="Room2",variable=var2).pack()
 
-buttonSelectDrop=tk.Button(mainframe,text="Select",command=selection).place(x=1240, y=8)
+buttonSelectDrop=tk.Button(rightframe,text="Select",command=selection).pack()
 # buttonSelectDrop.grid(row=4,column=3,sticky="w")
 
 
 """" Disable a Device"""
-label_dis=tk.Label(mainframe,text= "Disable a Device:", font = "Arial 16 bold" ,fg="red")
-label_dis.place(x=780, y=55)
+label_dis=tk.Label(rightframe,text= "Disable a Device:",font=20,fg="red")
+label_dis.pack()
 
 
-clicked_disabled=tk.StringVar(mainframe)
+clicked_disabled=tk.StringVar(rightframe)
 clicked_disabled.set(options[0])
-option_dis=tk.OptionMenu(mainframe,clicked_disabled ,*options ).place(x=970, y=50)
+option_dis=tk.OptionMenu(rightframe,clicked_disabled ,*options ).pack()
 # option.grid(row=0,column=0,padx=10,pady=10)
 
 
@@ -133,28 +118,54 @@ def selection_dis():
     # label=tk.Label(root,text=clicked.get() + " has been disabled",font=16)
     x=int(re.search(r'\d+', clicked_disabled.get()).group()) #get Device "x"
     if isActivated[x-1]==False:
-        tk.messagebox.showerror(title="Device Manager",message=clicked_disabled.get() + " is not active!")
+        tk.messagebox.showerror(title="Device Manager",message=clicked_disabled.get() + " has already been disabled!")
         return
     tk.messagebox.showinfo(title="Device Manager",message=clicked_disabled.get() + " has been disabled")
     canEnterRoom1[x-1]=False
     canEnterRoom2[x-1]=False
     isActivated[x-1]=False
         
-buttonSelectDrop=tk.Button(mainframe,text="Select",command=selection_dis)
-buttonSelectDrop.place(x=1080, y=48)
+        
+        
+        
+    
+
+buttonSelectDrop=tk.Button(rightframe,text="Select",command=selection_dis)
+buttonSelectDrop.pack()
 # buttonSelectDrop.grid(row=0,column=1,sticky="w")
 
+   
+    # window.mainloop()
 
-coordinates_label= tk.Label(mainframe, text="Location (m): ",fg = "blue",
-		 font = "Arial 16 bold")
-coordinates_label.place(x=780, y=95)
 
-beacons_label= tk.Label(mainframe, text="Distance to Beacons (m): ",fg = "Purple",
-		 font = "Arial 16 bold")
-beacons_label.place(x=780, y=135)
+def move(event = "none"):
+    global x, y
+    with open((os.path.dirname(os.getcwd()) + '/Server/coordinates.txt'), 'r') as file:
+        data = json.loads(file.read( ))
+    canvas.move(image, (data["x"] - x)*160, (y - data["y"])*160)
+    x = data["x"]
+    y = data["y"]
+    root.after(1000, move)
+    
+# # get entry from user
+# enter= tk.Entry(root,width=30, bg="green",fg="white",borderwidth= 10)
+# enter.pack()
 
-# This bind window to keys so that move is called when you press a key
-root.after(0, move)
+# newVisitor= tk.Button(root,text="Enable a Device", padx=10, pady=5, fg="white",
+#                       bg="#204D40",command=EnableDevice)
+
+# newVisitor.pack()
+
+
+# disableVisitor= tk.Button(root,text="Disable a Device", padx=10, pady=5, fg="white",
+#                       bg="#204D40" ,command=DisableDevice )
+
+# disableVisitor.pack()
+
  
+# This bind window to keys so that move is called when you press a key
+root.after(1000, move)
+
+
 # this creates the loop that makes the window stay 'active'
 root.mainloop()
