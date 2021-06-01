@@ -24,12 +24,13 @@ blescan.hci_enable_le_scan(sock_bluetooth)
 
 while True:
     returnedList = blescan.parse_events(sock_bluetooth, 200)
-    returnedList.append(get_angle())
+    angle = {'rssi': get_angle(), 'uuid': "angle"}
+    returnedList.append(angle)
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Connect the socket to the port where the server is listening
-    server_address = ( "192.168.10.101" , 10000)
+    server_address = ( "192.168.2.128" , 10000)
     print >>sys.stderr, 'connecting to %s port %s' % server_address
     sock.connect(server_address)
 
