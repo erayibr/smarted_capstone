@@ -41,16 +41,18 @@ while True:
 
         if len(returnedList):
             sock.sendall(json.dumps(returnedList))
-            print(returnedList)
+            # print(returnedList)
 
-        # Look for the response
+
         amount_received = 0
-        amount_expected = len(returnedList)
+        amount_expected = 1
         
-        # while amount_received < amount_expected:
-        #    data = sock.recv(16)
-        #    amount_received += len(data)
-        #    print >>sys.stderr, 'received "%s"' % data
+        while amount_received < amount_expected:
+            print("test before")
+            data = sock.recv(4)
+            print("test after")
+            amount_received += len(data)
+            print >>sys.stderr, 'received "%s"' % data
 
     finally:
         print >>sys.stderr, 'closing socket'
