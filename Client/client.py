@@ -6,6 +6,7 @@ import bluetooth._bluetooth as bluez
 import json
 import socket
 import sys
+from printer import get_angle
 
 dev_id = 0
 
@@ -20,9 +21,10 @@ except:
 blescan.hci_le_set_scan_parameters(sock_bluetooth)
 blescan.hci_enable_le_scan(sock_bluetooth)
 
+
 while True:
     returnedList = blescan.parse_events(sock_bluetooth, 200)
-
+    returnedList.append(get_angle())
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
