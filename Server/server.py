@@ -16,7 +16,7 @@ beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.75, 3.5)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Bind the socket to the port
-server_address = ('192.168.10.101', 10000)
+server_address = ('192.168.2.128', 10000)
 print('starting up on %s port %s' % server_address, file=sys.stderr)
 sock.bind(server_address)       
 
@@ -54,6 +54,7 @@ while True:
         #print(message)
         connection.close()
 
+
     time_start_proc = round(time.time() * 1000)        
     for beacon in message:
         #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
@@ -68,6 +69,9 @@ while True:
         elif(beacon["uuid"] == beacon_4.uuid):
             #print(beacon['rssi'])
             beacon_4.rssi.append(beacon['rssi'])
+        elif(beacon["uuid"] == "angle"):
+            angle = beacon['rssi']
+            
 
     beacon_1.calc()
     beacon_2.calc()
@@ -84,7 +88,7 @@ while True:
     x,y = locator(best3[3].distance, best3[1].distance, best3[2].distance, best3[3].pos_x, best3[1].pos_x, best3[2].pos_x, best3[3].pos_y, best3[1].pos_y, best3[2].pos_y)    
     print((x,y))
 
-    data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance , "beacon_4": beacon_4.distance}
+    data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance , "beacon_4": beacon_4.distance, "angle": angle }
 
     time_end = round(time.time() * 1000)
     print("The total time required for a server response in connection " + str(connection_number) + " is: " + str(time_end - time_start) + "ms")

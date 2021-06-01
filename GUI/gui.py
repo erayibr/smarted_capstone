@@ -5,6 +5,7 @@ import tkinter.messagebox
 import re
 import random
 import math
+import numpy as np
 
 # Create the window with the Tk class
 root = tk.Tk()
@@ -31,17 +32,20 @@ def move(event = "none"):
     global x, y
     with open((os.path.dirname(os.getcwd()) + '/Server/data.txt'), 'r') as file:
         data = json.loads(file.read( ))
-    angle = random.randint(0,360)
+    angle = data["angle"]
     x = data["x"]
     y = data["y"]
     x_image = 40 + data["x"]*161
     y_image = 622 -(data["y"])*161
     arrow_length = 100
     canvas.coords(image, x_image, y_image)
-    canvas.coords(arrow_1, x_image , y_image , arrow_length*math.cos(angle)+x_image , arrow_length*math.sin(angle) + y_image)
+    canvas.coords(arrow_1, x_image , y_image , arrow_length*math.cos(angle*np.pi/180)+x_image , arrow_length*math.sin(angle*np.pi/180) + y_image)
 
     coordinates = "Location (m):    x=" + " {:2.2f}     ".format(x) + "y=" + " {:2.2f} ".format(y)
     coordinates_label.config(text = coordinates)
+
+    angle = "Angle (degree): " + " {:2.2f}     ".format(angle)
+    angle_label.config(text = angle)
 
     beacons = "Distance to Beacons (m):    b1=" + " {:2.2f}     ".format(data["beacon_1"]) + "b2=" + " {:2.2f}     ".format(data["beacon_2"]) + "b3=" + " {:2.2f}     ".format(data["beacon_3"]) + "b4=" + " {:2.2f}     ".format(data["beacon_4"])
     beacons_label.config(text = beacons)
@@ -150,6 +154,10 @@ buttonSelectDrop.place(x=1080, y=48)
 coordinates_label= tk.Label(mainframe, text="Location (m): ",fg = "blue",
 		 font = "Arial 16 bold")
 coordinates_label.place(x=780, y=95)
+
+angle_label= tk.Label(mainframe, text="Angle (degree): ",fg = "black",
+		 font = "Arial 16 bold")
+angle_label.place(x=1180, y=95)
 
 beacons_label= tk.Label(mainframe, text="Distance to Beacons (m): ",fg = "Purple",
 		 font = "Arial 16 bold")
