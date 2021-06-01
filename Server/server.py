@@ -38,7 +38,9 @@ while True:
         while True:
             chunk = connection.recv(1024)
             message = message + chunk
-            if(not chunk):
+            print("recv")
+            if(chunk == b''):
+                print("break")
                 break
             # if chunk:
             #     #print('sending data back to the client', file=sys.stderr)
@@ -48,52 +50,64 @@ while True:
             #     break
             
     finally:
-        # Clean up the connection
-        
+        print("in finally:")
         message = json.loads(message)
+        # Clean up the connection
+        for beacon in message:
+            #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
+            if(beacon["uuid"] == beacon_1.uuid):
+                beacon_1.rssi.append(beacon['rssi'])
+            elif(beacon["uuid"] == beacon_2.uuid):
+                beacon_2.rssi.append(beacon['rssi'])
+            elif(beacon["uuid"] == beacon_3.uuid):
+                #print(beacon['rssi'])
+                beacon_3.rssi.append(beacon['rssi'])
+            elif(beacon["uuid"] == beacon_4.uuid):
+                #print(beacon['rssi'])
+                beacon_4.rssi.append(beacon['rssi'])
+            elif(beacon["uuid"] == "angle"):
+                angle = beacon['rssi']
+            
+        beacon_1.calc()
+        beacon_2.calc()
+        beacon_3.calc()
+        beacon_4.calc()
+
+        best3= []
+        best3.append(beacon_1)
+        best3.append(beacon_2)
+        best3.append(beacon_3)
+        best3.append(beacon_4)
+        best3.sort(key=lambda x: x.distance, reverse=True)
+
+        x,y = locator(best3[3].distance, best3[1].distance, best3[2].distance, best3[3].pos_x, best3[1].pos_x, best3[2].pos_x, best3[3].pos_y, best3[1].pos_y, best3[2].pos_y)    
+        
+        for beacon in best3:
+            if beacon.distance < 1.25:
+                file_num = beacon.uuid
+                break
+            else:
+                file_num = "none"
+        b = bytes(file_num, 'utf-8')
+
+        print(len(b))
+        
+        connection.sendall(b)
+        
         #print(message)
         connection.close()
 
 
-    time_start_proc = round(time.time() * 1000)        
-    for beacon in message:
-        #print(beacon["uuid"], beacon["rssi"], beacon["distance"])
-        
-        if(beacon["uuid"] == beacon_1.uuid):
-            beacon_1.rssi.append(beacon['rssi'])
-        elif(beacon["uuid"] == beacon_2.uuid):
-            beacon_2.rssi.append(beacon['rssi'])
-        elif(beacon["uuid"] == beacon_3.uuid):
-            #print(beacon['rssi'])
-            beacon_3.rssi.append(beacon['rssi'])
-        elif(beacon["uuid"] == beacon_4.uuid):
-            #print(beacon['rssi'])
-            beacon_4.rssi.append(beacon['rssi'])
-        elif(beacon["uuid"] == "angle"):
-            angle = beacon['rssi']
-            
-
-    beacon_1.calc()
-    beacon_2.calc()
-    beacon_3.calc()
-    beacon_4.calc()
-
-    best3= []
-    best3.append(beacon_1)
-    best3.append(beacon_2)
-    best3.append(beacon_3)
-    best3.append(beacon_4)
-    best3.sort(key=lambda x: x.distance, reverse=True)
-
-    x,y = locator(best3[3].distance, best3[1].distance, best3[2].distance, best3[3].pos_x, best3[1].pos_x, best3[2].pos_x, best3[3].pos_y, best3[1].pos_y, best3[2].pos_y)    
-    print((x,y))
+    # time_start_proc = round(time.time() * 1000)        
+    
+    # print((x,y))
 
     data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance , "beacon_4": beacon_4.distance, "angle": angle }
 
-    time_end = round(time.time() * 1000)
-    print("The total time required for a server response in connection " + str(connection_number) + " is: " + str(time_end - time_start) + "ms")
-    print("The processing time for a single device in connection " + str(connection_number) + " is: " + str(time_end - time_start_proc) + "ms")
-    connection_number = connection_number + 1
+    # time_end = round(time.time() * 1000)
+    # print("The total time required for a server response in connection " + str(connection_number) + " is: " + str(time_end - time_start) + "ms")
+    # print("The processing time for a single device in connection " + str(connection_number) + " is: " + str(time_end - time_start_proc) + "ms")
+    # connection_number = connection_number + 1
     beacon_1.flush()
     beacon_2.flush()
     beacon_3.flush()

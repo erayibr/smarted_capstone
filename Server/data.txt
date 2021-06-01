@@ -1,1 +1,1 @@
-{"x": 1.0, "y": 1.0, "beacon_1": NaN, "beacon_2": NaN, "beacon_3": NaN, "beacon_4": NaN, "angle": 72.3635469273917}
+{"x": 1.0, "y": 1.0, "beacon_1": 0.251188643150958, "beacon_2": NaN, "beacon_3": NaN, "beacon_4": NaN, "angle": 73.61045966596522}
