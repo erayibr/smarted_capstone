@@ -35,26 +35,20 @@ while True:
     sock.connect(server_address)
 
     try: 
-
         # Send data
         print >>sys.stderr, 'sending message'
 
-        if len(returnedList):
-            sock.sendall(json.dumps(returnedList))
-            # print(returnedList)
+        sock.sendall(json.dumps(returnedList))
+        # print(returnedList)
 
-
-        amount_received = 0
-        amount_expected = 1
+        # amount_received = 0
+        # amount_expected = len(json.dumps(returnedList))
+        # print("amount expected: " + str(amount_expected))
         
-        while amount_received < amount_expected:
-            print("test before")
-            data = sock.recv(4)
-            print("test after")
-            amount_received += len(data)
-            print >>sys.stderr, 'received "%s"' % data
-
     finally:
+        sock.send(b' ')
+        data = sock.recv(1024)
+        print >>sys.stderr, 'received "%s"' % data
         print >>sys.stderr, 'closing socket'
         sock.close()
 
