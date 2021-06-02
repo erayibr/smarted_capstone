@@ -1,6 +1,5 @@
 import socket
 import sys
-import sys
 import beacon
 from rssi_locator import locator
 from cleaner import clear
