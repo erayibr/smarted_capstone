@@ -50,8 +50,9 @@ while True:
         sock.send(b' ')
         data = sock.recv(1024)
         print >>sys.stderr, 'received "%s"' % data
-        with open('audio.txt', 'w') as f:
-            json.dump(data, f)
+        f = open("audio.txt", "w")
+        f.write(data)
+        f.close()
         print >>sys.stderr, 'closing socket'
         sock.close()
 
