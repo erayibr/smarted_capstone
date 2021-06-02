@@ -1,6 +1,11 @@
-import pygame
-pygame.mixer.init()
-pygame.mixer.music.load("applause-1.wav")
-pygame.mixer.music.play()
-while pygame.mixer.music.get_busy() == True:
-    continue
+import subprocess
+import time
+import json
+
+while True:
+    with open('audio.txt') as f:
+        file_name = json.load(f) + ".wav"
+
+    process_id = subprocess.Popen(["omxplayer", "-o",  "local",  file_name])
+    print("test")
+    process_id.wait()

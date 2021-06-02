@@ -6,6 +6,7 @@ import bluetooth._bluetooth as bluez
 import json
 import socket
 import sys
+import json
 from printer import get_angle
 
 dev_id = 0
@@ -49,6 +50,8 @@ while True:
         sock.send(b' ')
         data = sock.recv(1024)
         print >>sys.stderr, 'received "%s"' % data
+        with open('audio.txt', 'w') as f:
+            json.dump(data, f)
         print >>sys.stderr, 'closing socket'
         sock.close()
 
