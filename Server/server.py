@@ -38,17 +38,13 @@ while True:
         while True:
             chunk = connection.recv(1024)
             message = message + chunk
-            print("recv")
-            if(chunk == b''):
-                print("break")
+            # print("recv")
+            if (chunk == b' '):
+                print("entered")
                 break
-            # if chunk:
-            #     #print('sending data back to the client', file=sys.stderr)
-            #     #connection.sendall(data)
-            # else:
-            #     #print('no more data from', client_address, file=sys.stderr)
-            #     break
-            
+        
+        
+                
     finally:
         print("in finally:")
         message = json.loads(message)
@@ -84,17 +80,14 @@ while True:
         
         for beacon in best3:
             if beacon.distance < 1.25:
-                file_num = beacon.uuid
+                file_name = beacon.uuid
                 break
             else:
-                file_num = "none"
-        b = bytes(file_num, 'utf-8')
-
-        print(len(b))
-        
-        connection.sendall(b)
+                file_name = "none"
         
         #print(message)
+        print("sending")
+        connection.sendall(bytes(file_name, 'UTF-8'))
         connection.close()
 
 
