@@ -15,6 +15,8 @@ from scipy.optimize import fsolve
 #from math import exp
 #from numpy import linspace
 from numpy import power
+import warnings
+warnings.filterwarnings('ignore', 'The iteration is not making good progress')
 
 def locator(dist1, dist2, dist3,x1,x2,x3,y1,y2,y3):
     def equations(vars):
