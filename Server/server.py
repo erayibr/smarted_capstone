@@ -6,10 +6,10 @@ from cleaner import clear
 import json
 import time
 
-beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e" , 1.25, 3.5)
-beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c", 1.25, 0)
-beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 3.25, 1.25)
-beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.75, 3.5)
+beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e" , 1.25, 3.5, 90)
+beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c", 1.25, 0, -90)
+beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 3.25, 1.25, -90)
+beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.75, 3.5, 90)
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,6 +22,7 @@ sock.bind(server_address)
 # Listen for incoming connections
 sock.listen(1)
 connection_number = 1
+file_name_counter = 0
 
 while True:
     message = b""
@@ -78,12 +79,21 @@ while True:
         x,y = locator(best3[3].distance, best3[1].distance, best3[2].distance, best3[3].pos_x, best3[1].pos_x, best3[2].pos_x, best3[3].pos_y, best3[1].pos_y, best3[2].pos_y)    
         
         for beacon in best3:
-            if beacon.distance < 1.25:
-                file_name = beacon.uuid
+            if beacon.distance < 0.4 and beacon.angle_check(angle):
+                file_name_temp = beacon.uuid
+                print(beacon.pos_x)
                 break
             else:
-                file_name = "none"
-        
+                file_name_temp = "none"
+
+        if(file_name_counter == 0):
+            file_name = file_name_temp
+            file_name_counter = 4
+        elif ((file_name_counter != 0) and (file_name != file_name_temp)):
+            file_name_counter = file_name_counter - 1
+        elif (file_name == file_name_temp):
+            file_name_counter = min(4, file_name_counter + 1)
+
         #print(message)
         print("sending")
         connection.sendall(bytes(file_name, 'UTF-8'))

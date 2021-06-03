@@ -39,7 +39,7 @@ def move(event = "none"):
     y_image = 622 -(data["y"])*161
     arrow_length = 100
     canvas.coords(image, x_image, y_image)
-    canvas.coords(arrow_1, x_image , y_image , arrow_length*math.cos(angle*np.pi/180)+x_image , arrow_length*math.sin(angle*np.pi/180) + y_image)
+    canvas.coords(arrow_1, x_image , y_image , arrow_length*math.cos(-angle*np.pi/180)+x_image , arrow_length*math.sin(-angle*np.pi/180) + y_image)
 
     coordinates = "Location (m):    x=" + " {:2.2f}     ".format(x) + "y=" + " {:2.2f} ".format(y)
     coordinates_label.config(text = coordinates)
