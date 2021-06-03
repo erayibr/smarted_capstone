@@ -27,11 +27,12 @@ while True:
     returnedList = blescan.parse_events(sock_bluetooth, 100)
     angle = {'rssi': get_angle(), 'uuid': "angle"}
     returnedList.append(angle)
+    print(angle)
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Connect the socket to the port where the server is listening
-    server_address = ( "192.168.2.128" , 10000)
+    server_address = ( "192.168.10.101" , 10000)
     print >>sys.stderr, 'connecting to %s port %s' % server_address
     sock.connect(server_address)
 
@@ -48,7 +49,13 @@ while True:
         
     finally:
         sock.send(b' ')
-        data = sock.recv(1024)
+        print("before receive")
+        sock.settimeout(2)
+        try:
+            data = sock.recv(256)
+        except socket.timeout:
+            print("Timed out")
+        print("after receive")
         print >>sys.stderr, 'received "%s"' % data
         f = open("audio.txt", "w")
         f.write(data)
