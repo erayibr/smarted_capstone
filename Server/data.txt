@@ -1,1 +1,1 @@
-{"x": 1.0, "y": 1.0, "beacon_1": 0.5248074602497725, "beacon_2": NaN, "beacon_3": NaN, "beacon_4": NaN, "angle": 80.03619581009283}
+{"x": 1.0, "y": 1.0, "beacon_1": 7.5, "beacon_2": 7.5, "beacon_3": 7.5, "beacon_4": 7.5, "beacon_5": 7.5, "beacon_6": 7.5, "beacon_7": 7.5, "angle": 97.68552714838162, "room": 1, "audio": "none"}

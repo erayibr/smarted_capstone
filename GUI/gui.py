@@ -15,9 +15,12 @@ root.minsize(width = 1400, height = 800)
 
 mainframe=tk.Frame(root).pack()
 #to manage the right of the screen
+Offset_y=400    #offset from top
+Offset_x=-80     #offset from left
+
 
 # Create the canvas and make it visible with pack()
-canvas = tk.Canvas(mainframe, width=750, height=1080, highlightthickness=0, relief='ridge')
+canvas = tk.Canvas(mainframe, width=1920, height=1080, highlightthickness=0, relief='ridge')
 canvas.place(x=0, y=0) # this makes it visible
 
 map = tk.PhotoImage(file="map.png")
@@ -35,8 +38,8 @@ def move(event = "none"):
     angle = data["angle"]
     x = data["x"]
     y = data["y"]
-    x_image = 40 + data["x"]*161
-    y_image = 622 -(data["y"])*161
+    x_image = 40 + data["x"]*152    #160 pixel for 1 meter, 95% resized
+    y_image = 740 -(data["y"])*152  #160 pixel for 1 meter, 95% resized
     arrow_length = 100
     canvas.coords(image, x_image, y_image)
     canvas.coords(arrow_1, x_image , y_image , arrow_length*math.cos(-angle*np.pi/180)+x_image , arrow_length*math.sin(-angle*np.pi/180) + y_image)
@@ -47,8 +50,14 @@ def move(event = "none"):
     angle = "Angle (degree): " + " {:2.2f}     ".format(angle)
     angle_label.config(text = angle)
 
-    beacons = "Distance to Beacons (m):    b1=" + " {:2.2f}     ".format(data["beacon_1"]) + "b2=" + " {:2.2f}     ".format(data["beacon_2"]) + "b3=" + " {:2.2f}     ".format(data["beacon_3"]) + "b4=" + " {:2.2f}     ".format(data["beacon_4"])
+    beacons = "Distance to Beacons (m):    b1=" + " {:2.2f}     ".format(data["beacon_1"]) + "b2=" + " {:2.2f}     ".format(data["beacon_2"]) + "b3=" + " {:2.2f}     ".format(data["beacon_3"]) + "b4=" + " {:2.2f}     ".format(data["beacon_4"])     + "b5=" + " {:2.2f}     ".format(data["beacon_5"]) + "b6=" + " {:2.2f}     ".format(data["beacon_6"]) + "b7=" + " {:2.2f}     ".format(data["beacon_7"])
     beacons_label.config(text = beacons)
+
+    room = "In Room: {:2.0f}" .format(data["room"])
+    room_label.config(text = room)
+
+    audio = "Now Playing: " + data["audio"]
+    audio_label.config(text = audio)
     root.after(1000, move)
  
 
@@ -106,32 +115,32 @@ def selection():
 # buttonEnter.grid(row=2,column=1,sticky="w")     #w = west
 # buttonCancel.grid(row=2,column=1,sticky="e")    #e = east
 
-label=tk.Label(mainframe,text= "Activate a Device:", font = "Arial 16 bold",fg="green").place(y=15, x=780)
+label=tk.Label(mainframe,text= "Activate a Device:", font = "Arial 16 bold",fg="green").place(y=15+Offset_y, x=780+Offset_x)
 #Drop Down Box
 
 clicked=tk.StringVar(mainframe)
 clicked.set(options[0])
-option=tk.OptionMenu(mainframe,clicked ,*options ).place(x=970, y=10)
+option=tk.OptionMenu(mainframe,clicked ,*options ).place(x=970+Offset_x, y=10+Offset_y)
 # option.grid(row=3,column=1)
 
 #create boolean for checkbox
 var1=tk.IntVar()
-checkbox=tk.Checkbutton(mainframe,text="Room1",variable=var1).place(x=1080, y=15)
+checkbox=tk.Checkbutton(mainframe,text="Room1",variable=var1).place(x=1080+Offset_x, y=15+Offset_y)
 var2=tk.IntVar()
-checkbox2=tk.Checkbutton(checkbox,text="Room2",variable=var2).place(x=1160, y=15)
+checkbox2=tk.Checkbutton(checkbox,text="Room2",variable=var2).place(x=1160+Offset_x, y=15+Offset_y)
 
-buttonSelectDrop=tk.Button(mainframe,text="Select",command=selection).place(x=1240, y=8)
+buttonSelectDrop=tk.Button(mainframe,text="Select",command=selection).place(x=1240+Offset_x, y=8+Offset_y)
 # buttonSelectDrop.grid(row=4,column=3,sticky="w")
 
 
 """" Disable a Device"""
 label_dis=tk.Label(mainframe,text= "Disable a Device:", font = "Arial 16 bold" ,fg="red")
-label_dis.place(x=780, y=55)
+label_dis.place(x=780+Offset_x, y=55+Offset_y)
 
 
 clicked_disabled=tk.StringVar(mainframe)
 clicked_disabled.set(options[0])
-option_dis=tk.OptionMenu(mainframe,clicked_disabled ,*options ).place(x=970, y=50)
+option_dis=tk.OptionMenu(mainframe,clicked_disabled ,*options ).place(x=970+Offset_x, y=50+Offset_y)
 # option.grid(row=0,column=0,padx=10,pady=10)
 
 
@@ -147,21 +156,29 @@ def selection_dis():
     isActivated[x-1]=False
         
 buttonSelectDrop=tk.Button(mainframe,text="Select",command=selection_dis)
-buttonSelectDrop.place(x=1080, y=48)
+buttonSelectDrop.place(x=1080+Offset_x, y=48+Offset_y)
 # buttonSelectDrop.grid(row=0,column=1,sticky="w")
 
 
 coordinates_label= tk.Label(mainframe, text="Location (m): ",fg = "blue",
 		 font = "Arial 16 bold")
-coordinates_label.place(x=780, y=95)
+coordinates_label.place(x=780+Offset_x, y=95+Offset_y)
 
 angle_label= tk.Label(mainframe, text="Angle (degree): ",fg = "black",
 		 font = "Arial 16 bold")
-angle_label.place(x=1180, y=95)
+angle_label.place(x=1180+Offset_x, y=95+Offset_y)
 
 beacons_label= tk.Label(mainframe, text="Distance to Beacons (m): ",fg = "Purple",
+		 font = "Arial 12 bold")
+beacons_label.place(x=780+Offset_x, y=135+Offset_y)
+
+room_label= tk.Label(mainframe, text="In Room: ",fg = "Red",
 		 font = "Arial 16 bold")
-beacons_label.place(x=780, y=135)
+room_label.place(x=780+Offset_x, y=175+Offset_y)
+
+audio_label= tk.Label(mainframe, text="Now Playing: ",fg = "Purple",
+		 font = "Arial 16 bold")
+audio_label.place(x=780+Offset_x, y=215+Offset_y)
 
 # This bind window to keys so that move is called when you press a key
 root.after(0, move)

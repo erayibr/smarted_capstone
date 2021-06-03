@@ -18,7 +18,7 @@ from numpy import power
 import warnings
 warnings.filterwarnings('ignore', 'The iteration is not making good progress')
 
-def locator(dist1, dist2, dist3,x1,x2,x3,y1,y2,y3):
+def locator(dist1, dist2, dist3,x1,x2,x3,y1,y2,y3, room):
     def equations(vars):
         x , y, z = vars
         eq1 = (x-x1)**2 + (y-y1)**2 - power(r1,2)
@@ -126,16 +126,24 @@ def locator(dist1, dist2, dist3,x1,x2,x3,y1,y2,y3):
     
     #use three circles and solve with scipy.optimize.fsolve
     d=min(dist1,dist2,dist3)
+    guess_x = 1
+    guess_y = 1
     if d<2:
         if d==dist1:
+            guess_x=x1
+            guess_y=y1
             r1= dist1
             r2= (dist2/(dist1 + dist2))    *centerTocenter1_2
             r3= (dist3/(dist1 + dist3))    *centerTocenter1_3
         elif d==dist2:
+            guess_x=x2
+            guess_y=y2
             r1= (dist1/(dist1 + dist2))    *centerTocenter1_2
             r2= dist2
             r3= (dist3/(dist2 + dist3))    *centerTocenter2_3
         else:
+            guess_x=x3
+            guess_y=y3
             r1= (dist1/(dist1 + dist3))    *centerTocenter1_3
             r2= (dist2/(dist2 + dist3))    *centerTocenter2_3
             r3= dist3
@@ -144,10 +152,25 @@ def locator(dist1, dist2, dist3,x1,x2,x3,y1,y2,y3):
         r2= dist2
         r3= dist3
     
-    x, y, z =  fsolve(equations, (1, 1, 1))
-    if x>3.9:
-        x=3.9
-    if y>3.4:
-        y=3.4
+    x, y, z =  fsolve(equations, (guess_x, guess_y, 1))
+    
+    if(room == 1):
+        if x>3.9:
+            x=3.9
+        elif x<0:
+            x = 0
+        if y>3.4:
+            y=3.4
+        elif y <0:
+            y=0
+    else:
+        if x>6.5: 
+            x = 6.5
+        elif x<2.6:
+            x = 2.6
+        if y>4.9:
+            y = 4.9
+        elif y<3.5:
+            y = 3.5
     return abs(x),abs(y)
    

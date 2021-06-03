@@ -1,3 +1,4 @@
+
 /*
    Based on Neil Kolban example for IDF: https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/tests/BLE%20Tests/SampleScan.cpp
    Ported to Arduino ESP32 by pcbreflux
@@ -42,7 +43,7 @@ uint8_t temprature_sens_read();
 BLEAdvertising *pAdvertising;
 //struct timeval now;
 
-#define BEACON_UUID           "1e868196-2dad-4fe5-a8d1-b2e980ee3c4d" // UUID 1 128-Bit (may use linux tool uuidgen or random numbers via https://www.uuidgenerator.net/)
+#define BEACON_UUID           "81ea2933-1074-48a6-96bd-128496f2b9ef" // UUID 1 128-Bit (may use linux tool uuidgen or random numbers via https://www.uuidgenerator.net/)
 
 void setBeacon() {
 

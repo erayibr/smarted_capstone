@@ -16,4 +16,7 @@ beacon5 = raspberry: FB6E46120F6720812444A02997A07BCE
 beacon6 = raspberry: 4D3CEE80E9B2D1A8E54FAD2D9681861E
 	  arduino: 1e868196-2dad-4fe5-a8d1-b2e980ee3c4d
 
+beacon7 = raspberry: efb9f2968412bd96a64874103329ea81
+	  arduino: 81ea2933-1074-48a6-96bd-128496f2b9ef
+
 

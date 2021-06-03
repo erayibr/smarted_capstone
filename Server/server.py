@@ -6,10 +6,13 @@ from cleaner import clear
 import json
 import time
 
-beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e" , 1.25, 3.5, 90)
-beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c", 1.25, 0, -90)
-beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 3.25, 1.25, -90)
-beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.75, 3.5, 90)
+beacon_1 = beacon.beacon("4d6fc88bbe756698da486866a36ec78e" , 1.0, 3.5, 90, "Carvaggio")
+beacon_2 = beacon.beacon("bc5f638e79976aa42b455a6d5a70128c", 1.0, 0.0, -90, "Saint Remy")
+beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 2.5, 0.0, -90, "Mona Lisa")
+beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.5, 3.5, 90, "Last Supper")
+beacon_5 = beacon.beacon("fb6e46120f6720812444a02997a07bce", 4.2, 3.5, 90, "Starry Night")
+beacon_6 = beacon.beacon("4d3cee80e9b2d1a8e54fad2d9681861e", 5.2, 3.5, 90, "Potato Eaters")
+beacon_7 = beacon.beacon("efb9f2968412bd96a64874103329ea81", 2.6, 4.3, 90, "Introduction")
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -63,6 +66,15 @@ while True:
             elif(beacon["uuid"] == beacon_4.uuid):
                 #print(beacon['rssi'])
                 beacon_4.rssi.append(beacon['rssi'])
+            elif(beacon["uuid"] == beacon_5.uuid):
+                #print(beacon['rssi'])
+                beacon_5.rssi.append(beacon['rssi'])
+            elif(beacon["uuid"] == beacon_6.uuid):
+                #print(beacon['rssi'])
+                beacon_6.rssi.append(beacon['rssi'])
+            elif(beacon["uuid"] == beacon_7.uuid):
+                #print(beacon['rssi'])
+                beacon_7.rssi.append(beacon['rssi'])
             elif(beacon["uuid"] == "angle"):
                 angle = beacon['rssi']
             
@@ -70,26 +82,38 @@ while True:
         beacon_2.calc()
         beacon_3.calc()
         beacon_4.calc()
+        beacon_5.calc()
+        beacon_6.calc()
+        beacon_7.calc()
 
         best3= []
         best3.append(beacon_1)
         best3.append(beacon_2)
         best3.append(beacon_3)
         best3.append(beacon_4)
-        best3.sort(key=lambda x: x.distance, reverse=True)
-
-        x,y = locator(best3[3].distance, best3[1].distance, best3[2].distance, best3[3].pos_x, best3[1].pos_x, best3[2].pos_x, best3[3].pos_y, best3[1].pos_y, best3[2].pos_y)    
+        best3.append(beacon_5)
+        best3.append(beacon_6)
+        best3.append(beacon_7)
+        best3.sort(key=lambda x: x.distance, reverse=False)
+        print(best3[0].distance)
         
-        for beacon in best3:
-            if beacon.distance < 0.4 and beacon.angle_check(angle):
-                file_name_temp = beacon.uuid
-                print(beacon.pos_x)
-                break
-            else:
-                file_name_temp = "None"
+        if((best3[0].uuid == beacon_5.uuid) or (best3[0].uuid == beacon_6.uuid) or (best3[0].uuid == beacon_7.uuid)):
+            room = 2
+        else:
+            room = 1
+
+        x,y = locator(best3[0].calc_default(), best3[1].calc_default(), best3[2].calc_default(), best3[0].pos_x, best3[1].pos_x, best3[2].pos_x, best3[0].pos_y, best3[1].pos_y, best3[2].pos_y, room)    
+    
+        if (best3[0].distance < 1.2) and (best3[0].angle_check(angle) and best3[0].uuid != beacon_7.uuid ):
+            file_name_temp = best3[0].uuid
+            audio_file_temp = best3[0].audio_file
+        else:
+            file_name_temp = "none"
+            audio_file_temp = "none"
 
         if(file_name_counter == 0):
             file_name = file_name_temp
+            audio_file = audio_file_temp
             file_name_counter = 4
         elif ((file_name_counter != 0) and (file_name != file_name_temp)):
             file_name_counter = file_name_counter - 1
@@ -111,7 +135,7 @@ while True:
     
     # print((x,y))
 
-    data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance , "beacon_4": beacon_4.distance, "angle": angle }
+    data = {"x": x, "y": y, "beacon_1": beacon_1.distance, "beacon_2": beacon_2.distance, "beacon_3": beacon_3.distance , "beacon_4": beacon_4.distance, "beacon_5": beacon_5.distance, "beacon_6": beacon_6.distance, "beacon_7": beacon_7.distance, "angle": angle, "room": room, "audio": audio_file}
 
     # time_end = round(time.time() * 1000)
     # print("The total time required for a server response in connection " + str(connection_number) + " is: " + str(time_end - time_start) + "ms")
@@ -121,6 +145,9 @@ while True:
     beacon_2.flush()
     beacon_3.flush()
     beacon_4.flush()
+    beacon_5.flush()
+    beacon_6.flush()
+    beacon_7.flush()
 
     with open('data.txt', 'w') as file:
         file.write(json.dumps(data))
