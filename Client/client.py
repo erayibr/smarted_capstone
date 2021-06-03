@@ -24,7 +24,7 @@ blescan.hci_enable_le_scan(sock_bluetooth)
 
 
 while True:
-    returnedList = blescan.parse_events(sock_bluetooth, 200)
+    returnedList = blescan.parse_events(sock_bluetooth, 100)
     angle = {'rssi': get_angle(), 'uuid': "angle"}
     returnedList.append(angle)
     # Create a TCP/IP socket
