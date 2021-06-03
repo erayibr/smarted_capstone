@@ -10,7 +10,7 @@ import json
 from printer import get_angle
 
 dev_id = 0
-
+data = "none"
 try:
     sock_bluetooth = bluez.hci_open_dev(dev_id)
     print "ble thread started"
