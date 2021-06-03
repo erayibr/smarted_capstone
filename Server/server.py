@@ -15,7 +15,7 @@ beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.75, 3.5, 90)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Bind the socket to the port
-server_address = ('192.168.2.128', 10000)
+server_address = ('192.168.10.101', 10000)
 print('starting up on %s port %s' % server_address, file=sys.stderr)
 sock.bind(server_address)       
 
@@ -33,13 +33,15 @@ while True:
     try:
         print('connection from', client_address, file=sys.stderr)
         time_start = round(time.time() * 1000)
-
+        counter = 0;
         # Receive the data in small chunks and retransmit it
         while True:
-            chunk = connection.recv(1024)
+            print("received")
+            chunk = connection.recv(256)
             message = message + chunk
+            counter = counter + 1
             # print("recv")
-            if (chunk == b' '):
+            if (chunk == b' ') or counter > 50:
                 print("entered")
                 break
         
@@ -84,7 +86,7 @@ while True:
                 print(beacon.pos_x)
                 break
             else:
-                file_name_temp = "none"
+                file_name_temp = "None"
 
         if(file_name_counter == 0):
             file_name = file_name_temp
@@ -96,7 +98,12 @@ while True:
 
         #print(message)
         print("sending")
-        connection.sendall(bytes(file_name, 'UTF-8'))
+        connection.settimeout(2)
+        try:
+            print("sendall")
+            connection.sendall(bytes(file_name, 'UTF-8'))
+        except connection.timeout:
+            print("time out")
         connection.close()
 
 

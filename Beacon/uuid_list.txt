@@ -10,4 +10,10 @@ beacon3 = raspberry: 213a8fd53d3fad98b245a8d2b2242a48
 beacon4 = raspberry: 6f506cd2e98121a7a5493da8fcca68d6
 	  arduino: d668cafc-a83d-49a5-a721-81e9d26c506f
 
+beacon5 = raspberry: FB6E46120F6720812444A02997A07BCE
+	  arduino: ce7ba097-29a0-4424-8120-670f12466efb
+
+beacon6 = raspberry: 4D3CEE80E9B2D1A8E54FAD2D9681861E
+	  arduino: 1e868196-2dad-4fe5-a8d1-b2e980ee3c4d
+
 
