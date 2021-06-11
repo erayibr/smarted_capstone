@@ -7,6 +7,7 @@ import json
 import socket
 import sys
 import json
+import os
 from printer import get_angle
 
 dev_id = 0
@@ -22,9 +23,9 @@ except:
 blescan.hci_le_set_scan_parameters(sock_bluetooth)
 blescan.hci_enable_le_scan(sock_bluetooth)
 
-
 while True:
     returnedList = blescan.parse_events(sock_bluetooth, 100)
+    os.system("cd .. && cd MPU92500/examples/basic-usage/ && sudo python3 measure.py")
     angle = {'rssi': get_angle(), 'uuid': "angle"}
     returnedList.append(angle)
     print(angle)
