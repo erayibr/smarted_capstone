@@ -28,7 +28,14 @@ class beacon:
         return 10**((float(-50)-float(np.median(self.rssi)))/(10*self.N))
 
     def angle_check(self, angle):
-        return (((self.center + 70) > angle) and ((self.center - 70) < angle))
+        if(self.center == 90 and (angle > 20) and (angle < 160)):
+            return 1
+        elif (self.center == -90 and (angle > -160) and (angle < -20)):
+            return 1
+        elif (self.center == 180 and abs(angle)>110):
+            return 1
+        else:
+            return 0
 
 
         

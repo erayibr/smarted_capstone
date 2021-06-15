@@ -12,7 +12,7 @@ beacon_3 = beacon.beacon("213a8fd53d3fad98b245a8d2b2242a48", 2.5, 0.0, -90, "Mon
 beacon_4 = beacon.beacon("6f506cd2e98121a7a5493da8fcca68d6", 2.5, 3.5, 90, "Last Supper")
 beacon_5 = beacon.beacon("fb6e46120f6720812444a02997a07bce", 4.2, 3.5, 90, "Starry Night")
 beacon_6 = beacon.beacon("4d3cee80e9b2d1a8e54fad2d9681861e", 5.2, 3.5, 90, "Potato Eaters")
-beacon_7 = beacon.beacon("efb9f2968412bd96a64874103329ea81", 2.6, 4.3, 90, "Introduction")
+beacon_7 = beacon.beacon("efb9f2968412bd96a64874103329ea81", 2.6, 4.3, 180, "Introduction - Girl With a Pearl Earring")
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -76,7 +76,7 @@ while True:
                 #print(beacon['rssi'])
                 beacon_7.rssi.append(beacon['rssi'])
             elif(beacon["uuid"] == "angle"):
-                angle = beacon['rssi']
+                angle = float(beacon['rssi'])
             
         beacon_1.calc()
         beacon_2.calc()
@@ -104,7 +104,7 @@ while True:
 
         x,y = locator(best3[0].calc_default(), best3[1].calc_default(), best3[2].calc_default(), best3[0].pos_x, best3[1].pos_x, best3[2].pos_x, best3[0].pos_y, best3[1].pos_y, best3[2].pos_y, room)    
     
-        if (best3[0].distance < 1.2) and (best3[0].angle_check(angle) and best3[0].uuid != beacon_7.uuid ):
+        if (best3[0].distance < 1.2) and (best3[0].angle_check(angle)):
             file_name_temp = best3[0].uuid
             audio_file_temp = best3[0].audio_file
         else:
@@ -114,11 +114,11 @@ while True:
         if(file_name_counter == 0):
             file_name = file_name_temp
             audio_file = audio_file_temp
-            file_name_counter = 4
+            file_name_counter = 3
         elif ((file_name_counter != 0) and (file_name != file_name_temp)):
             file_name_counter = file_name_counter - 1
         elif (file_name == file_name_temp):
-            file_name_counter = min(4, file_name_counter + 1)
+            file_name_counter = min(3, file_name_counter + 1)
 
         #print(message)
         print("sending")
