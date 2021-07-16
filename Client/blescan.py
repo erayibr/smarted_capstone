@@ -155,13 +155,12 @@ def parse_events(sock, loop_count=100):
                     uuid = returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
                     txp, = struct.unpack("b", pkt[report_pkt_offset -2])
                     rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
-                    distance = 10**((float(txp)-float(rssi))/(20))
+                    #distance = 10**((float(-txp)-float(rssi))/(30))
             
                 
-                    beac =  { 'uuid' : uuid, 'txp' : txp, 'rssi' : rssi, 'distance' : distance}
+                    beac =  { 'uuid' : uuid, 'txp' : txp, 'rssi' : rssi}
                     
-                    if (uuid == "24c7536bfbb24ef58c8d61a80923448f"):
-                        myFullList.append(beac);
+                    myFullList.append(beac);
 
                 done = True
 

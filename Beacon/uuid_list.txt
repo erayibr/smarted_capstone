@@ -1,0 +1,22 @@
+beacon1 = raspberry: 4d6fc88bbe756698da486866a36ec78e
+	  arduino: 8ec76ea3-6668-48da-9866-75be8bc86f4d
+
+beacon2 = raspberry: bc5f638e79976aa42b455a6d5a70128c
+	  arduino: 8c12705a-6d5a-452b-a46a-97798e635fbc
+
+beacon3 = raspberry: 213a8fd53d3fad98b245a8d2b2242a48
+	  arduino: 482a24b2-d2a8-45b2-98ad-3f3dd58f3a21
+
+beacon4 = raspberry: 6f506cd2e98121a7a5493da8fcca68d6
+	  arduino: d668cafc-a83d-49a5-a721-81e9d26c506f
+
+beacon5 = raspberry: FB6E46120F6720812444A02997A07BCE
+	  arduino: ce7ba097-29a0-4424-8120-670f12466efb
+
+beacon6 = raspberry: 4D3CEE80E9B2D1A8E54FAD2D9681861E
+	  arduino: 1e868196-2dad-4fe5-a8d1-b2e980ee3c4d
+
+beacon7 = raspberry: efb9f2968412bd96a64874103329ea81
+	  arduino: 81ea2933-1074-48a6-96bd-128496f2b9ef
+
+
